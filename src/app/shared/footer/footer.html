@@ -1,0 +1,52 @@
+<footer class="site-footer">
+    <div class="footer-main">
+
+        <div class="footer-brand">
+            <div class="footer-logo">DIFERPA <span>S.A.C.</span></div>
+            <p>Tu socio confiable en materiales de construcción, ferretería industrial y herramientas de la más alta calidad.</p>
+            <button class="btn-whatsapp-footer" (click)="abrirWhatsApp()">
+                💬 Contactar por WhatsApp
+            </button>
+        </div>
+
+        <div class="footer-links">
+            <h4>Navegación</h4>
+            <ul>
+                <li><a routerLink="/home">Inicio</a></li>
+                <li><a routerLink="/catalogo">Catálogo completo</a></li>
+                <li><a routerLink="/catalogo" [queryParams]="{cat: 'Cemento y Concreto'}">Cemento y Concreto</a></li>
+                <li><a routerLink="/catalogo" [queryParams]="{cat: 'Herramientas'}">Herramientas</a></li>
+                <li><a routerLink="/catalogo" [queryParams]="{cat: 'Pinturas'}">Pinturas</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-links">
+            <h4>Servicios</h4>
+            <ul>
+                <li>🚚 Envío gratis desde S/ {{ envioMinimo }}</li>
+                <li>🛡️ Garantía de calidad</li>
+                <li>💳 Pago seguro</li>
+                <li>🎧 Soporte 24/7</li>
+                <li>📦 Despacho a obras</li>
+            </ul>
+        </div>
+
+        <div class="footer-contact">
+            <h4>Contacto</h4>
+            <p>📞 {{ telefono }}</p>
+            <p>📍 Lima, Perú</p>
+            <p>🕐 Lun – Sáb: 8am – 6pm</p>
+            <div class="social-links">
+                <a href="#" title="Facebook">📘</a>
+                <a href="#" title="Instagram">📸</a>
+                <a href="#" title="YouTube">▶️</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        <p>© {{ anio }} DIFERPA S.A.C. Todos los derechos reservados.</p>
+        <p>Hecho con ❤️ para la construcción peruana</p>
+    </div>
+</footer>

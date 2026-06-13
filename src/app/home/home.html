@@ -1,0 +1,59 @@
+<app-navbar></app-navbar>
+
+<header class="hero-section">
+    <div class="hero-content">
+        <h1>Tu Socio Confiable en Construcción</h1>
+        <p>Materiales de construcción, ferretería industrial y herramientas de la más alta calidad para tus proyectos.</p>
+        <div class="hero-buttons">
+            <button class="btn-primary" (click)="irAlCatalogo()">Ver Catálogo</button>
+            <button class="btn-secondary" (click)="contactarVentas()">Contactar Ventas</button>
+        </div>
+    </div>
+    <div class="hero-image">
+        <img src="img/hero_construccion.png" alt="Construcción DIFERPA">
+    </div>
+</header>
+
+<section class="features-container">
+    <div class="feature-card">🚚 <strong>Envío Gratis</strong><br><small>En compras mayores a S/ 500</small></div>
+    <div class="feature-card">🛡️ <strong>Garantía de Calidad</strong><br><small>Productos certificados</small></div>
+    <div class="feature-card">💳 <strong>Pago Seguro</strong><br><small>100% protegido</small></div>
+    <div class="feature-card">🎧 <strong>Soporte 24/7</strong><br><small>Asesoría personalizada</small></div>
+</section>
+
+<section class="categories-section">
+    <h2>Nuestras Categorías</h2>
+    <p>Encuentra todo lo que necesitas para tu proyecto</p>
+    <div class="categories-grid">
+        <div class="category-item" (click)="irACategoria('Cemento y Concreto')">📦 Cemento y Concreto</div>
+        <div class="category-item" (click)="irACategoria('Herramientas')">🔨 Herramientas</div>
+        <div class="category-item" (click)="irACategoria('Ferretería Industrial')">⚙️ Ferretería Industrial</div>
+        <div class="category-item" (click)="irACategoria('Pinturas')">🎨 Pinturas</div>
+        <div class="category-item" (click)="irACategoria('Eléctricos')">⚡ Eléctricos</div>
+    </div>
+</section>
+
+<section class="featured-section">
+    <h2>Productos Destacados</h2>
+    <div class="products-grid">
+        <div class="product-card" *ngFor="let prod of productosDestacados">
+            <img [src]="prod.imagen" [alt]="prod.nombre" loading="lazy">
+            <h3>{{ prod.nombre }}</h3>
+            <p class="price">S/ {{ prod.precio | number:'1.2-2' }}</p>
+            <div class="card-actions">
+                <button class="btn-detail" (click)="verDetalle(prod.id)">Ver Detalles</button>
+                <button class="btn-cart-add" (click)="anadirAlCarrito(prod)" [disabled]="!prod.enStock">
+                    🛒 Añadir
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-banner">
+    <h2>¿Necesitas asesoría para tu proyecto?</h2>
+    <p>Nuestro equipo de expertos está listo para ayudarte a encontrar los mejores materiales.</p>
+    <button class="btn-whatsapp" (click)="contactarVentas()">Contactar por WhatsApp</button>
+</section>
+
+<app-footer></app-footer>

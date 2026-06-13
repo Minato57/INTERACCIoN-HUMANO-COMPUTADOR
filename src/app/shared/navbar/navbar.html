@@ -1,0 +1,38 @@
+<div class="top-bar">
+    <span>📞 {{ telefonoDisplay }}</span>
+    <span>🚚 Envío gratis en compras mayores a S/ 500</span>
+</div>
+
+<nav class="navbar">
+    <a class="nav-logo" routerLink="/home">DIFERPA <span>S.A.C.</span></a>
+
+    <div class="search-box">
+        <input type="text"
+               placeholder="Buscar productos, herramientas, materiales..."
+               [(ngModel)]="terminoBusqueda"
+               (keyup.enter)="buscar()">
+        <button class="search-btn" (click)="buscar()">🔍</button>
+    </div>
+
+    <div class="nav-actions">
+        <button class="icon-btn" title="Mi cuenta">👤</button>
+        <button class="icon-btn" title="Favoritos">❤️</button>
+        <button class="icon-btn" title="Carrito" (click)="abrirCarrito()">
+            🛒 <span class="badge" *ngIf="cantidadCarrito > 0">{{ cantidadCarrito }}</span>
+        </button>
+        <button class="icon-btn btn-hamburger" (click)="toggleMenu()" title="Menú">
+            {{ menuAbierto ? '✖' : '☰' }}
+        </button>
+    </div>
+</nav>
+
+<div class="menu-categories" [class.open]="menuAbierto">
+    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Inicio</a>
+    <a routerLink="/catalogo" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Catálogo</a>
+    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Dashboard</a>
+    <a routerLink="/catalogo" [queryParams]="{cat: 'Cemento y Concreto'}" (click)="cerrarMenu()">Cemento y Concreto</a>
+    <a routerLink="/catalogo" [queryParams]="{cat: 'Herramientas'}" (click)="cerrarMenu()">Herramientas</a>
+    <a routerLink="/catalogo" [queryParams]="{cat: 'Ferretería Industrial'}" (click)="cerrarMenu()">Ferretería Industrial</a>
+    <a routerLink="/catalogo" [queryParams]="{cat: 'Pinturas'}" (click)="cerrarMenu()">Pinturas</a>
+    <a routerLink="/catalogo" [queryParams]="{cat: 'Eléctricos'}" (click)="cerrarMenu()">Eléctricos</a>
+</div>

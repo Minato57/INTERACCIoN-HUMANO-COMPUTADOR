@@ -1,0 +1,72 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Estilos específicos para el Dashboard */
+.dashboard-wrapper {
+    background-color: #f8f9fc;
+    min-height: calc(100vh - 150px);
+}
+
+.border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+
+.border-left-info {
+    border-left: 0.25rem solid #36b9cc !important;
+}
+
+.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+
+.text-primary {
+    color: #4e73df !important;
+}
+
+.text-success {
+    color: #1cc88a !important;
+}
+
+.text-info {
+    color: #36b9cc !important;
+}
+
+.text-warning {
+    color: #f6c23e !important;
+}
+
+/* Fix Bootstrap background colors because :root variables are lost in Emulated Encapsulation */
+.bg-primary { background-color: #4e73df !important; color: white !important; }
+.bg-success { background-color: #1cc88a !important; color: white !important; }
+.bg-info { background-color: #36b9cc !important; color: white !important; }
+.bg-warning { background-color: #f6c23e !important; color: #212529 !important; }
+.bg-secondary { background-color: #858796 !important; color: white !important; }
+
+/* Fix table borders (missing :root vars makes them inherit body color) */
+.table, .table-bordered td, .table-bordered th, .table thead th {
+    border-color: #e2e8f0 !important;
+}
+
+/* Fix pills */
+.badge.rounded-pill {
+    border-radius: 50rem !important;
+    padding: 0.35em 0.8em !important;
+}
+
+.card {
+    border-radius: 8px;
+    border: none;
+}
+
+.shadow {
+    box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15) !important;
+}
+
+/* Fix chart sizes */
+.chart-area, .chart-pie {
+    position: relative;
+    width: 100%;
+}
