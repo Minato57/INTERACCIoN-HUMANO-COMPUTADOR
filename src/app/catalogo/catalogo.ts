@@ -30,7 +30,7 @@ export class CatalogComponent implements OnInit {
   ordenSeleccionado: string = 'destacados';
 
   // Propiedades para UI
-  categorias = [CATEGORIAS.TODOS, ...CATEGORIAS_ARRAY];
+  categorias: string[] = [CATEGORIAS.TODOS];
   precioMinimo: number = 0;
   opcionesOrden = [
     { valor: 'destacados', etiqueta: 'Destacados primero' },
@@ -49,16 +49,23 @@ export class CatalogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.productos = this.productService.obtenerProductos();
-    this.calcularPrecioMaximo();
+    this.productService.obtenerCategoriasBackend().subscribe(cats => {
+      this.categorias = [CATEGORIAS.TODOS, ...cats];
+    });
+
     // Leer parámetros de búsqueda y categoría enviados desde home o navbar
     this.route.queryParams.subscribe(params => {
       // Si hay parámetros, los aplicamos. Si no, reseteamos a por defecto.
       this.terminoBusqueda = params['q'] || '';
       this.categoriaSeleccionada = params['cat'] || CATEGORIAS.TODOS;
       
-      // Aplicar filtros sin actualizar la URL (ya estamos respondiendo a un cambio de URL)
-      this.aplicarFiltros(false);
+      // Obtener productos desde el backend filtrando por categoría
+      this.productService.obtenerProductos(this.categoriaSeleccionada).subscribe(productos => {
+        this.productos = productos;
+        this.calcularPrecioMaximo();
+        // Aplicar los demás filtros locales (precio, stock, búsqueda)
+        this.aplicarFiltros(false);
+      });
     });
   }
 

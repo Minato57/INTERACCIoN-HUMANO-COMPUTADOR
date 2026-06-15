@@ -25,11 +25,9 @@
     <h2>Nuestras Categorías</h2>
     <p>Encuentra todo lo que necesitas para tu proyecto</p>
     <div class="categories-grid">
-        <div class="category-item" (click)="irACategoria('Cemento y Concreto')">📦 Cemento y Concreto</div>
-        <div class="category-item" (click)="irACategoria('Herramientas')">🔨 Herramientas</div>
-        <div class="category-item" (click)="irACategoria('Ferretería Industrial')">⚙️ Ferretería Industrial</div>
-        <div class="category-item" (click)="irACategoria('Pinturas')">🎨 Pinturas</div>
-        <div class="category-item" (click)="irACategoria('Eléctricos')">⚡ Eléctricos</div>
+        <div class="category-item" *ngFor="let cat of categoriasBackend" (click)="irACategoria(cat)">
+            {{ getIconoCategoria(cat) }} {{ cat }}
+        </div>
     </div>
 </section>
 

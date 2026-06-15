@@ -18,6 +18,7 @@ import { ToastService } from '../shared/toast/toast.service';
 })
 export class HomeComponent implements OnInit {
   productosDestacados: Producto[] = [];
+  categoriasBackend: string[] = [];
 
   constructor(
     private productService: ProductService,
@@ -27,7 +28,25 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.productosDestacados = this.productService.obtenerProductosDestacados();
+    this.productService.obtenerProductosDestacados().subscribe(productos => {
+      this.productosDestacados = productos;
+    });
+    this.productService.obtenerCategoriasBackend().subscribe(cats => {
+      this.categoriasBackend = cats;
+    });
+  }
+
+  /**
+   * Mapea un emoji por defecto a las categorías para la vista visual
+   */
+  getIconoCategoria(cat: string): string {
+    const normalize = cat.toLowerCase();
+    if (normalize.includes('cemento') || normalize.includes('concreto')) return '📦';
+    if (normalize.includes('herramienta')) return '🔨';
+    if (normalize.includes('ferreter')) return '⚙️';
+    if (normalize.includes('pintura')) return '🎨';
+    if (normalize.includes('eléctrico') || normalize.includes('electrico')) return '⚡';
+    return '🏷️';
   }
 
   /**

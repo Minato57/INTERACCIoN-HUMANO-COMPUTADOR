@@ -1,153 +1,109 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Producto } from './model';
-import { CATEGORIAS } from '../constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  
-  private productos: Producto[] = [
-    { 
-      id: 1, 
-      nombre: 'Cemento Portland Tipo I - Bolsa 42.5 kg', 
-      descripcion: 'Cemento Portland Tipo I de alta calidad, ideal para obras generales',
-      categoria: CATEGORIAS.CEMENTO, 
-      precio: 22.50, 
-      imagen: 'img/cemento_portland.png', 
-      enStock: true, 
-      stockQuantity: 150,
-      destacado: true 
-    },
-    { 
-      id: 2, 
-      nombre: 'Cemento Portland Tipo V - Bolsa 42.5 kg', 
-      descripcion: 'Resistente a sulfatos, recomendado para ambientes agresivos',
-      categoria: CATEGORIAS.CEMENTO, 
-      precio: 26.00, 
-      imagen: 'img/cemento_portland.png', 
-      enStock: true, 
-      stockQuantity: 80,
-      destacado: true 
-    },
-    { 
-      id: 3, 
-      nombre: 'Concreto Premezclado F\'c 210 kg/cm²', 
-      descripcion: 'Concreto listo para usar, f\'c 210 kg/cm² para estructuras',
-      categoria: CATEGORIAS.CEMENTO, 
-      precio: 320.00, 
-      imagen: 'img/concreto_premezclado.png', 
-      enStock: true, 
-      stockQuantity: 200,
-      destacado: false 
-    },
-    { 
-      id: 4, 
-      nombre: 'Taladro Percutor Litio 20V DEWALT', 
-      descripcion: 'Taladro profesional con batería de litio, 2 baterías y cargador',
-      categoria: CATEGORIAS.HERRAMIENTAS, 
-      precio: 565.00, 
-      imagen: 'img/taladro_dewalt.png', 
-      enStock: true, 
-      stockQuantity: 25,
-      destacado: true 
-    },
-    { 
-      id: 5, 
-      nombre: 'Amoladora Angular 4.5"', 
-      descripcion: 'Herramienta de corte y desbaste, potente y duradora',
-      categoria: CATEGORIAS.HERRAMIENTAS, 
-      precio: 189.00, 
-      imagen: 'img/amoladora_angular.png', 
-      enStock: false, 
-      stockQuantity: 0,
-      destacado: false 
-    },
-    {
-      id: 6,
-      nombre: 'Arena Fina para Mezcla - Bolsa 25 kg',
-      descripcion: 'Arena de primera calidad para mortero y mezcla',
-      categoria: CATEGORIAS.CEMENTO,
-      precio: 12.50,
-      imagen: 'img/arena_fina.png',
-      enStock: true,
-      stockQuantity: 500,
-      destacado: false
-    },
-    {
-      id: 7,
-      nombre: 'Ladrillo Rojo 18 Huecos',
-      descripcion: 'Ladrillo de excelente calidad para muros',
-      categoria: CATEGORIAS.FERRETERIA,
-      precio: 0.85,
-      imagen: 'img/ladrillo_rojo.png',
-      enStock: true,
-      stockQuantity: 5000,
-      destacado: false
-    },
-    {
-      id: 8,
-      nombre: 'Pintura Vinílica Premium 1 Galón',
-      descripcion: 'Pintura vinílica de primera calidad, acabado semi-mate',
-      categoria: CATEGORIAS.PINTURAS,
-      precio: 45.00,
-      imagen: 'img/pintura_vinilica.png',
-      enStock: true,
-      stockQuantity: 120,
-      destacado: false
-    }
-  ];
+  private apiUrl = 'http://localhost:3001/products';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   /**
-   * Obtiene todos los productos disponibles
+   * Mapea un producto del backend a la interfaz Producto del frontend
    */
-  obtenerProductos(): Producto[] {
-    return this.productos;
+  private mapToProducto(bp: any): Producto {
+    return {
+      id: bp.productIdAlmacen,
+      productIdFabrica: bp.productIdFabrica,
+      nombre: bp.name,
+      descripcion: bp.ubicacion, 
+      categoria: bp.productTypeName || 'General',
+      precio: Number(bp.pricePerMinor) || 0,
+      imagen: bp.imageUrl || 'img/cemento_portland.png',
+      enStock: bp.stock > 0,
+      stockQuantity: bp.stock,
+      destacado: false
+    };
+  }
+
+  /**
+   * Obtiene todos los productos disponibles, opcionalmente filtrados por categoría
+   */
+  obtenerProductos(categoria?: string): Observable<Producto[]> {
+    let params = new HttpParams();
+    if (categoria && categoria !== 'Todos') {
+      params = params.set('category', categoria);
+    }
+    return this.http.get<any[]>(this.apiUrl, { params }).pipe(
+      map(data => data.map(bp => this.mapToProducto(bp)))
+    );
   }
 
   /**
    * Obtiene solo los productos destacados
    */
-  obtenerProductosDestacados(): Producto[] {
-    return this.productos.filter(prod => prod.destacado);
+  obtenerProductosDestacados(): Observable<Producto[]> {
+    return this.obtenerProductos().pipe(
+      map(productos => {
+        return productos.slice(0, 4).map(p => ({ ...p, destacado: true }));
+      })
+    );
   }
 
   /**
    * Obtiene un producto por su ID
    */
-  obtenerProductoPorId(id: number): Producto | undefined {
-    return this.productos.find(prod => prod.id === id);
+  obtenerProductoPorId(id: number): Observable<Producto | undefined> {
+    return this.obtenerProductos().pipe(
+      map(productos => productos.find(prod => prod.id === id))
+    );
+  }
+
+  /**
+   * Obtiene categorías únicas desde el backend
+   */
+  obtenerCategoriasBackend(): Observable<string[]> {
+    return this.http.get<any[]>('http://localhost:3001/categories').pipe(
+      map(types => types.map(t => t.productTypeName))
+    );
   }
 
   /**
    * Obtiene categorías únicas de los productos
    */
-  obtenerCategorias(): string[] {
-    const categorias = new Set(this.productos.map(prod => prod.categoria));
-    return Array.from(categorias);
+  obtenerCategorias(): Observable<string[]> {
+    return this.obtenerProductos().pipe(
+      map(productos => {
+        const categorias = new Set(productos.map(prod => prod.categoria));
+        return Array.from(categorias);
+      })
+    );
   }
 
   /**
    * Busca productos por nombre (búsqueda insensible a mayúsculas)
    */
-  buscarProductos(termino: string): Producto[] {
-    if (!termino.trim()) {
-      return this.productos;
-    }
-    
-    const busqueda = termino.toLowerCase();
-    return this.productos.filter(prod => 
-      prod.nombre.toLowerCase().includes(busqueda) ||
-      (prod.descripcion && prod.descripcion.toLowerCase().includes(busqueda))
+  buscarProductos(termino: string): Observable<Producto[]> {
+    return this.obtenerProductos().pipe(
+      map(productos => {
+        if (!termino.trim()) return productos;
+        const busqueda = termino.toLowerCase();
+        return productos.filter(prod => 
+          prod.nombre.toLowerCase().includes(busqueda) ||
+          (prod.descripcion && prod.descripcion.toLowerCase().includes(busqueda))
+        );
+      })
     );
   }
 
   /**
    * Obtiene productos por categoría
    */
-  obtenerProductosPorCategoria(categoria: string): Producto[] {
-    return this.productos.filter(prod => prod.categoria === categoria);
+  obtenerProductosPorCategoria(categoria: string): Observable<Producto[]> {
+    return this.obtenerProductos(categoria);
   }
 }

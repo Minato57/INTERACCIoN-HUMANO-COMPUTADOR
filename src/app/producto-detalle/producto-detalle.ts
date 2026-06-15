@@ -32,12 +32,14 @@ export class ProductoDetalleComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const id = Number(params.get('id'));
-      this.producto = this.productService.obtenerProductoPorId(id);
-      if (!this.producto) {
-        this.router.navigate(['/catalogo']);
-      } else {
-        this.imagenActiva = this.producto.imagen;
-      }
+      this.productService.obtenerProductoPorId(id).subscribe(producto => {
+        this.producto = producto;
+        if (!this.producto) {
+          this.router.navigate(['/catalogo']);
+        } else {
+          this.imagenActiva = this.producto.imagen;
+        }
+      });
     });
   }
 

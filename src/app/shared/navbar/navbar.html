@@ -30,9 +30,5 @@
     <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Inicio</a>
     <a routerLink="/catalogo" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Catálogo</a>
     <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Dashboard</a>
-    <a routerLink="/catalogo" [queryParams]="{cat: 'Cemento y Concreto'}" (click)="cerrarMenu()">Cemento y Concreto</a>
-    <a routerLink="/catalogo" [queryParams]="{cat: 'Herramientas'}" (click)="cerrarMenu()">Herramientas</a>
-    <a routerLink="/catalogo" [queryParams]="{cat: 'Ferretería Industrial'}" (click)="cerrarMenu()">Ferretería Industrial</a>
-    <a routerLink="/catalogo" [queryParams]="{cat: 'Pinturas'}" (click)="cerrarMenu()">Pinturas</a>
-    <a routerLink="/catalogo" [queryParams]="{cat: 'Eléctricos'}" (click)="cerrarMenu()">Eléctricos</a>
+    <a *ngFor="let cat of categoriasBackend" routerLink="/catalogo" [queryParams]="{cat: cat}" (click)="cerrarMenu()">{{ cat }}</a>
 </div>

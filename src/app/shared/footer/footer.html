@@ -3,7 +3,8 @@
 
         <div class="footer-brand">
             <div class="footer-logo">DIFERPA <span>S.A.C.</span></div>
-            <p>Tu socio confiable en materiales de construcción, ferretería industrial y herramientas de la más alta calidad.</p>
+            <p>Tu socio confiable en materiales de construcción, ferretería industrial y herramientas de la más alta
+                calidad.</p>
             <button class="btn-whatsapp-footer" (click)="abrirWhatsApp()">
                 💬 Contactar por WhatsApp
             </button>
@@ -14,9 +15,8 @@
             <ul>
                 <li><a routerLink="/home">Inicio</a></li>
                 <li><a routerLink="/catalogo">Catálogo completo</a></li>
-                <li><a routerLink="/catalogo" [queryParams]="{cat: 'Cemento y Concreto'}">Cemento y Concreto</a></li>
-                <li><a routerLink="/catalogo" [queryParams]="{cat: 'Herramientas'}">Herramientas</a></li>
-                <li><a routerLink="/catalogo" [queryParams]="{cat: 'Pinturas'}">Pinturas</a></li>
+                <li *ngFor="let cat of categoriasBackend"><a routerLink="/catalogo" [queryParams]="{cat: cat}">{{ cat
+                        }}</a></li>
             </ul>
         </div>
 
