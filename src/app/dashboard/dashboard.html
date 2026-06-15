@@ -1,170 +1,201 @@
 <app-navbar></app-navbar>
 
-<!-- Contenedor principal de Bootstrap -->
-<div class="dashboard-wrapper container-fluid py-4">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="h3 mb-0 text-gray-800">Dashboard Gerencial</h2>
-        <button class="btn btn-primary shadow-sm">
-            <i class="fas fa-download fa-sm text-white-50"></i> Generar Reporte
-        </button>
+<div class="dashboard-wrapper">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-title">Dashboard Gerencial</h1>
+      <p class="dash-subtitle">Bienvenido, aquí tienes el resumen de hoy — {{ fechaHoy }}</p>
+    </div>
+    <div class="dash-header-actions">
+      <span class="badge-live"><span class="live-dot"></span>En vivo</span>
+      <button class="btn-export" (click)="exportarReporte()">
+        📥 Exportar Reporte
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <!-- Ventas -->
+    <div class="kpi-card kpi-blue">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-info">
+        <span class="kpi-label">Ventas del Mes</span>
+        <span class="kpi-value">S/ {{ kpis.ventasTotales | number:'1.2-2' }}</span>
+        <span class="kpi-trend trend-up">▲ +12.4% vs mes anterior</span>
+      </div>
     </div>
 
-    <!-- Fila de Tarjetas KPI -->
-    <div class="row">
-        <!-- KPI Ventas -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Ventas (Mensual)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">S/ {{ kpis.ventasTotales | number:'1.2-2' }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <span class="fs-2">💰</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- KPI Órdenes -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Órdenes (Hoy)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ kpis.ordenesHoy }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <span class="fs-2">📦</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- KPI Progreso de Meta -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-info shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Meta de Ventas</div>
-                            <div class="row no-gutters align-items-center">
-                                <div class="col-auto">
-                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">80%</div>
-                                </div>
-                                <div class="col">
-                                    <div class="progress progress-sm mr-2" style="height: 10px;">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <span class="fs-2">🎯</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- KPI Usuarios Activos -->
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Usuarios Activos</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ kpis.usuariosActivos }}</div>
-                        </div>
-                        <div class="col-auto">
-                            <span class="fs-2">👥</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Órdenes -->
+    <div class="kpi-card kpi-green">
+      <div class="kpi-icon">📦</div>
+      <div class="kpi-info">
+        <span class="kpi-label">Órdenes Hoy</span>
+        <span class="kpi-value">{{ kpis.ordenesHoy }}</span>
+        <span class="kpi-trend trend-up">▲ +8 vs ayer</span>
+      </div>
     </div>
 
-    <!-- Fila de Gráficos -->
-    <div class="row">
-        <!-- Gráfico de Barras -->
-        <div class="col-xl-8 col-lg-7 mb-4">
-            <div class="card shadow mb-4 h-100">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Resumen de Ventas</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-area" style="height: 300px;">
-                        <canvas #ventasChart></canvas>
-                    </div>
-                </div>
-            </div>
+    <!-- Meta -->
+    <div class="kpi-card kpi-orange">
+      <div class="kpi-icon">🎯</div>
+      <div class="kpi-info">
+        <span class="kpi-label">Meta de Ventas</span>
+        <span class="kpi-value">{{ kpis.metaPorcentaje }}%</span>
+        <div class="kpi-progress-bar">
+          <div class="kpi-progress-fill" [style.width.%]="kpis.metaPorcentaje"></div>
         </div>
-
-        <!-- Gráfico de Dona -->
-        <div class="col-xl-4 col-lg-5 mb-4">
-            <div class="card shadow mb-4 h-100">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Ventas por Categoría</h6>
-                </div>
-                <div class="card-body">
-                    <div class="chart-pie pt-4 pb-2" style="height: 300px;">
-                        <canvas #categoriasChart></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <!-- Fila de Tabla -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Últimos Pedidos Recibidos</h6>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover" width="100%" cellspacing="0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>N° Pedido</th>
-                                    <th>Cliente</th>
-                                    <th>Fecha</th>
-                                    <th>Estado</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let pedido of ultimosPedidos">
-                                    <td>{{ pedido.id }}</td>
-                                    <td>{{ pedido.cliente }}</td>
-                                    <td>{{ pedido.fecha }}</td>
-                                    <td>
-                                        <span class="badge rounded-pill" 
-                                              [ngClass]="{
-                                                'bg-success': pedido.estado === 'Completado',
-                                                'bg-warning text-dark': pedido.estado === 'Pendiente',
-                                                'bg-info': pedido.estado === 'Enviado',
-                                                'bg-secondary': pedido.estado === 'Procesando'
-                                              }">
-                                            {{ pedido.estado }}
-                                        </span>
-                                    </td>
-                                    <td>S/ {{ pedido.total | number:'1.2-2' }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Productos -->
+    <div class="kpi-card kpi-purple">
+      <div class="kpi-icon">🏪</div>
+      <div class="kpi-info">
+        <span class="kpi-label">Productos en Stock</span>
+        <span class="kpi-value">{{ kpis.productosStock }}</span>
+        <span class="kpi-trend trend-down">▼ 3 con stock mínimo</span>
+      </div>
     </div>
+
+    <!-- Clientes -->
+    <div class="kpi-card kpi-teal">
+      <div class="kpi-icon">👥</div>
+      <div class="kpi-info">
+        <span class="kpi-label">Clientes Activos</span>
+        <span class="kpi-value">{{ kpis.usuariosActivos }}</span>
+        <span class="kpi-trend trend-up">▲ +34 este mes</span>
+      </div>
+    </div>
+
+    <!-- Ticket promedio -->
+    <div class="kpi-card kpi-red">
+      <div class="kpi-icon">🧾</div>
+      <div class="kpi-info">
+        <span class="kpi-label">Ticket Promedio</span>
+        <span class="kpi-value">S/ {{ kpis.ticketPromedio | number:'1.2-2' }}</span>
+        <span class="kpi-trend trend-up">▲ +5.2% vs mes anterior</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-grid">
+    <!-- Gráfico de Barras: Ventas Mensuales -->
+    <div class="chart-card chart-large">
+      <div class="chart-card-header">
+        <div>
+          <h3 class="chart-title">Resumen de Ventas Mensuales</h3>
+          <p class="chart-subtitle">Enero – Junio 2026</p>
+        </div>
+        <div class="chart-tabs">
+          <button class="chart-tab active">Barras</button>
+          <button class="chart-tab" (click)="toggleLineChart()">Línea</button>
+        </div>
+      </div>
+      <div class="chart-body">
+        <canvas #ventasChart></canvas>
+      </div>
+    </div>
+
+    <!-- Gráfico Dona: Por Categoría -->
+    <div class="chart-card chart-small">
+      <div class="chart-card-header">
+        <div>
+          <h3 class="chart-title">Ventas por Categoría</h3>
+          <p class="chart-subtitle">Distribución actual</p>
+        </div>
+      </div>
+      <div class="chart-body">
+        <canvas #categoriasChart></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Row: Progreso de Categorías + Tabla -->
+  <div class="bottom-grid">
+
+    <!-- Barras de Progreso por Categoría -->
+    <div class="card-section">
+      <div class="section-header">
+        <h3 class="section-title">📊 Stock por Categoría</h3>
+        <span class="section-badge">Inventario</span>
+      </div>
+      <div class="progress-list">
+        <div class="progress-item" *ngFor="let cat of stockCategorias">
+          <div class="progress-row">
+            <span class="progress-label">{{ cat.nombre }}</span>
+            <span class="progress-value">{{ cat.porcentaje }}%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" [style.width.%]="cat.porcentaje" [style.background]="cat.color"></div>
+          </div>
+          <div class="progress-meta">
+            <span>{{ cat.cantidad }} unidades</span>
+            <span [class]="cat.estado === 'OK' ? 'status-ok' : 'status-low'">{{ cat.estado }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla de Últimos Pedidos -->
+    <div class="card-section table-section">
+      <div class="section-header">
+        <h3 class="section-title">📋 Últimos Pedidos</h3>
+        <input class="table-search" [(ngModel)]="busquedaPedido" placeholder="🔍 Buscar..." id="searchPedidos" />
+      </div>
+      <div class="table-wrapper">
+        <table class="dash-table">
+          <thead>
+            <tr>
+              <th>N° Pedido</th>
+              <th>Cliente</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let pedido of pedidosFiltrados" class="table-row-animated">
+              <td class="td-id">{{ pedido.id }}</td>
+              <td>{{ pedido.cliente }}</td>
+              <td>{{ pedido.fecha }}</td>
+              <td>
+                <span class="estado-badge" [ngClass]="'estado-' + pedido.estado.toLowerCase()">
+                  {{ pedido.estado }}
+                </span>
+              </td>
+              <td class="td-total">S/ {{ pedido.total | number:'1.2-2' }}</td>
+            </tr>
+            <tr *ngIf="pedidosFiltrados.length === 0">
+              <td colspan="5" class="td-empty">No se encontraron resultados</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-footer">
+        <span>Mostrando {{ pedidosFiltrados.length }} de {{ ultimosPedidos.length }} registros</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Gráfico de Línea: Tendencia de visitantes -->
+  <div class="charts-grid" style="margin-top: 0;">
+    <div class="chart-card chart-full">
+      <div class="chart-card-header">
+        <div>
+          <h3 class="chart-title">Tendencia de Visitantes al Catálogo</h3>
+          <p class="chart-subtitle">Últimas 4 semanas</p>
+        </div>
+      </div>
+      <div class="chart-body" style="height: 200px;">
+        <canvas #visitasChart></canvas>
+      </div>
+    </div>
+  </div>
 
 </div>
 
