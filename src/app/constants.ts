@@ -16,7 +16,7 @@ export const CATEGORIAS_ARRAY = Object.values(CATEGORIAS).filter(cat => cat !== 
 export const PRECIO_MAXIMO_DEFECTO = 600;
 export const PRECIO_MINIMO = 0;
 
-export const CONTACTO_WHATSAPP = '+51007054321';
-export const CONTACTO_TELEFONO = '+31 007054321';
+export const CONTACTO_WHATSAPP = '+51 993 413 312';
+export const CONTACTO_TELEFONO = '+51 993 413 312';
 
 export const ENVIO_GRATIS_MINIMO = 500;
