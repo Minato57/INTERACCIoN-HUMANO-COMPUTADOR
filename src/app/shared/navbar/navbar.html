@@ -15,7 +15,9 @@
     </div>
 
     <div class="nav-actions">
-        <button class="icon-btn" title="Mi cuenta">👤</button>
+        <button class="icon-btn" title="{{ authService.isLoggedIn() ? 'Cerrar sesión' : 'Mi cuenta (Login)' }}" (click)="toggleLoginModal()">
+            {{ authService.isLoggedIn() ? '🚪' : '👤' }}
+        </button>
         <button class="icon-btn" title="Favoritos">❤️</button>
         <button class="icon-btn" title="Carrito" (click)="abrirCarrito()">
             🛒 <span class="badge" *ngIf="cantidadCarrito > 0">{{ cantidadCarrito }}</span>
@@ -29,6 +31,30 @@
 <div class="menu-categories" [class.open]="menuAbierto">
     <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Inicio</a>
     <a routerLink="/catalogo" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Catálogo</a>
-    <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Dashboard</a>
+    <a *ngIf="authService.isAdmin()" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Dashboard</a>
     <a *ngFor="let cat of categoriasBackend" routerLink="/catalogo" [queryParams]="{cat: cat}" (click)="cerrarMenu()">{{ cat }}</a>
+</div>
+
+<!-- Modal de Login -->
+<div class="modal-overlay" *ngIf="mostrarModalLogin" (click)="cerrarModalLogin()">
+    <div class="login-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>Acceso Administrativo</h2>
+            <button class="close-btn" (click)="cerrarModalLogin()">✖</button>
+        </div>
+        <div class="modal-body">
+            <div class="alert alert-error" *ngIf="loginError">
+                Credenciales incorrectas. Intente de nuevo.
+            </div>
+            <div class="form-group">
+                <label>Usuario</label>
+                <input type="text" [(ngModel)]="loginUser" placeholder="Ej: admin">
+            </div>
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" [(ngModel)]="loginPass" placeholder="******" (keyup.enter)="iniciarSesion()">
+            </div>
+            <button class="btn-primary login-submit" (click)="iniciarSesion()">Iniciar Sesión</button>
+        </div>
+    </div>
 </div>

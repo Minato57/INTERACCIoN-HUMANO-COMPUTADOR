@@ -4,6 +4,8 @@ import { CatalogComponent } from './catalogo/catalogo';
 import { ProductoDetalleComponent } from './producto-detalle/producto-detalle';
 import { DashboardComponent } from './dashboard/dashboard';
 
+import { AuthGuard } from './shared/auth/auth.guard';
+
 export const routes: Routes = [
     // 1. Al entrar a la raíz (http://localhost:4200/), redirige automáticamente a /home
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -17,8 +19,8 @@ export const routes: Routes = [
     // 4. Ruta para el detalle de un producto
     { path: 'producto/:id', component: ProductoDetalleComponent },
 
-    // 5. Ruta para el Dashboard Interactivo (Semana 12)
-    { path: 'dashboard', component: DashboardComponent },
+    // 5. Ruta para el Dashboard Interactivo (Semana 12) PROTEGIDA POR AUTH GUARD
+    { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
 
     // 6. Ruta wildcard - redirige cualquier ruta no existente a home
     { path: '**', redirectTo: 'home' }

@@ -9,4 +9,8 @@ export interface Producto {
     enStock: boolean;
     stockQuantity?: number;
     destacado: boolean;
+    rating?: number;
+    reviews?: number;
+    descuento?: number;
+    precioOriginal?: number;
 }

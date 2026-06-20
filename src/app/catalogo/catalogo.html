@@ -39,31 +39,68 @@
     </aside>
 
     <main class="catalog-results">
-        <!-- Barra superior: resultados + ordenar -->
+        <!-- Barra superior: resultados + ordenar + toggle de vista -->
         <div class="results-bar">
             <div>
                 <h2>Catálogo de Productos</h2>
                 <p class="results-count">{{ productosFiltrados.length }} producto{{ productosFiltrados.length !== 1 ? 's' : '' }} encontrado{{ productosFiltrados.length !== 1 ? 's' : '' }}</p>
             </div>
-            <div class="sort-box">
-                <label for="sort-select">Ordenar por:</label>
-                <select id="sort-select" [(ngModel)]="ordenSeleccionado" (change)="aplicarFiltros()">
-                    <option *ngFor="let op of opcionesOrden" [value]="op.valor">{{ op.etiqueta }}</option>
-                </select>
+            
+            <div class="results-actions">
+                <div class="view-toggle">
+                    <button [class.active]="vistaActual === 'grid'" (click)="cambiarVista('grid')" title="Vista de cuadrícula">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    </button>
+                    <button [class.active]="vistaActual === 'lista'" (click)="cambiarVista('lista')" title="Vista de lista">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                    </button>
+                </div>
+
+                <div class="sort-box">
+                    <label for="sort-select">Ordenar por:</label>
+                    <select id="sort-select" [(ngModel)]="ordenSeleccionado" (change)="aplicarFiltros()">
+                        <option *ngFor="let op of opcionesOrden" [value]="op.valor">{{ op.etiqueta }}</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <div class="products-grid">
-            <div class="product-card" *ngFor="let prod of productosFiltrados">
+        <!-- Grid o Lista de Productos -->
+        <div [ngClass]="vistaActual === 'grid' ? 'products-grid' : 'products-list'">
+            <div class="product-card" *ngFor="let prod of productosPaginados">
                 <div class="card-img-wrapper">
-                    <img [src]="prod.imagen" [alt]="prod.nombre" loading="lazy">
-                    <span class="stock-badge" *ngIf="!prod.enStock">Agotado</span>
-                    <span class="featured-badge" *ngIf="prod.destacado">⭐ Destacado</span>
+                    <img [src]="prod.imagen" [alt]="prod.nombre" loading="lazy" class="prod-img">
+                    
+                    <!-- Badges superpuestos -->
+                    <div class="badges-container">
+                        <span class="stock-badge" *ngIf="!prod.enStock">Agotado</span>
+                        <span class="discount-badge" *ngIf="prod.descuento">-{{ prod.descuento }}%</span>
+                        <span class="featured-badge" *ngIf="prod.destacado && !prod.descuento">⭐ Destacado</span>
+                    </div>
+
+                    <!-- Botón de vista rápida (aparece en hover) -->
+                    <button class="btn-quick-view" (click)="abrirQuickView(prod)">👁️ Vista rápida</button>
                 </div>
+                
                 <div class="card-info">
                     <span class="category-tag">{{ prod.categoria }}</span>
-                    <h3>{{ prod.nombre }}</h3>
-                    <p class="price">S/ {{ prod.precio | number:'1.2-2' }}</p>
+                    <h3 (click)="verDetalle(prod.id)" class="clickable-title">{{ prod.nombre }}</h3>
+                    
+                    <!-- Calificación con estrellas -->
+                    <div class="product-rating">
+                        <span class="stars">⭐⭐⭐⭐<span [style.opacity]="prod.rating && prod.rating < 4.5 ? '0.3' : '1'">⭐</span></span>
+                        <span class="rating-text">{{ prod.rating }} ({{ prod.reviews }})</span>
+                    </div>
+
+                    <div class="price-container">
+                        <p class="price" [class.discounted-price]="prod.descuento">S/ {{ prod.precio | number:'1.2-2' }}</p>
+                        <p class="original-price" *ngIf="prod.descuento">S/ {{ prod.precioOriginal | number:'1.2-2' }}</p>
+                    </div>
+
+                    <p class="product-description-list" *ngIf="vistaActual === 'lista'">
+                        {{ prod.descripcion || 'Material de construcción de alta calidad para tus proyectos. Disponible para envío inmediato a nivel nacional.' }}
+                    </p>
+
                     <div class="card-actions">
                         <button class="btn-detail" (click)="verDetalle(prod.id)">Ver Detalles</button>
                         <button class="btn-cart-add" (click)="anadirAlCarrito(prod)" [disabled]="!prod.enStock">
@@ -74,11 +111,58 @@
             </div>
         </div>
 
+        <!-- Paginación -->
+        <div class="pagination" *ngIf="totalPaginas > 1">
+            <button [disabled]="paginaActual === 1" (click)="cambiarPagina(paginaActual - 1)">Anterior</button>
+            <span class="page-info">Página {{ paginaActual }} de {{ totalPaginas }}</span>
+            <button [disabled]="paginaActual === totalPaginas" (click)="cambiarPagina(paginaActual + 1)">Siguiente</button>
+        </div>
+
         <div class="empty-state" *ngIf="productosFiltrados.length === 0">
             <p>😕 No se encontraron productos con los filtros seleccionados.</p>
             <button class="btn-clean-filters" (click)="limpiarFiltros()">Limpiar filtros</button>
         </div>
     </main>
+</div>
+
+<!-- Modal de Vista Rápida (Quick View) -->
+<div class="modal-backdrop" *ngIf="productoQuickView" (click)="cerrarQuickView()">
+    <div class="quick-view-modal" (click)="$event.stopPropagation()">
+        <button class="btn-close-modal" (click)="cerrarQuickView()">×</button>
+        <div class="quick-view-content">
+            <div class="qv-image">
+                <img [src]="productoQuickView.imagen" [alt]="productoQuickView.nombre">
+                <span class="discount-badge large" *ngIf="productoQuickView.descuento">-{{ productoQuickView.descuento }}%</span>
+            </div>
+            <div class="qv-details">
+                <span class="category-tag">{{ productoQuickView.categoria }}</span>
+                <h2>{{ productoQuickView.nombre }}</h2>
+                <div class="product-rating">
+                    <span class="stars">⭐⭐⭐⭐⭐</span>
+                    <span class="rating-text">{{ productoQuickView.rating }} ({{ productoQuickView.reviews }} reseñas)</span>
+                </div>
+                
+                <div class="price-container large">
+                    <p class="price">S/ {{ productoQuickView.precio | number:'1.2-2' }}</p>
+                    <p class="original-price" *ngIf="productoQuickView.descuento">S/ {{ productoQuickView.precioOriginal | number:'1.2-2' }}</p>
+                </div>
+                
+                <p class="qv-description">{{ productoQuickView.descripcion || 'Excelente producto de alta durabilidad y rendimiento garantizado por el fabricante.' }}</p>
+                
+                <div class="qv-stock-info">
+                    <span class="status-icon" [class.in-stock]="productoQuickView.enStock"></span>
+                    {{ productoQuickView.enStock ? 'Disponible en tienda (' + productoQuickView.stockQuantity + ' unid.)' : 'Agotado temporalmente' }}
+                </div>
+
+                <div class="qv-actions">
+                    <button class="btn-cart-add full" (click)="anadirAlCarrito(productoQuickView); cerrarQuickView()" [disabled]="!productoQuickView.enStock">
+                        🛒 Añadir al carrito
+                    </button>
+                    <button class="btn-detail outline" (click)="verDetalle(productoQuickView.id); cerrarQuickView()">Ver más detalles</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <app-footer></app-footer>

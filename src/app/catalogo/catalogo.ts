@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Producto } from '../product/model';
 import { ProductService } from '../product/product.service';
-import { CATEGORIAS, CATEGORIAS_ARRAY, PRECIO_MAXIMO_DEFECTO, CONTACTO_WHATSAPP } from '../constants';
+import { CATEGORIAS, PRECIO_MAXIMO_DEFECTO } from '../constants';
 import { NavbarComponent } from '../shared/navbar/navbar';
 import { FooterComponent } from '../shared/footer/footer';
 import { CartService } from '../shared/cart/cart.service';
@@ -20,6 +20,12 @@ import { ToastService } from '../shared/toast/toast.service';
 export class CatalogComponent implements OnInit {
   productos: Producto[] = [];
   productosFiltrados: Producto[] = [];
+
+  // Estado de las nuevas características
+  vistaActual: 'grid' | 'lista' = 'grid';
+  productoQuickView: Producto | null = null;
+  paginaActual: number = 1;
+  itemsPorPagina: number = 8;
 
   // Estados de los filtros
   categoriaSeleccionada: string = CATEGORIAS.TODOS;
@@ -109,6 +115,7 @@ export class CatalogComponent implements OnInit {
     });
 
     this.productosFiltrados = filtrados;
+    this.paginaActual = 1; // Volver a la primera página al filtrar
 
     // Mantener la URL en sincronía con los filtros seleccionados
     if (actualizarUrl) {
@@ -122,6 +129,38 @@ export class CatalogComponent implements OnInit {
       });
     }
   }
+
+  /**
+   * Obtiene los productos paginados
+   */
+  get productosPaginados(): Producto[] {
+    const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
+    return this.productosFiltrados.slice(inicio, inicio + this.itemsPorPagina);
+  }
+
+  get totalPaginas(): number {
+    return Math.ceil(this.productosFiltrados.length / this.itemsPorPagina);
+  }
+
+  cambiarPagina(pagina: number) {
+    if (pagina >= 1 && pagina <= this.totalPaginas) {
+      this.paginaActual = pagina;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  cambiarVista(vista: 'grid' | 'lista') {
+    this.vistaActual = vista;
+  }
+
+  abrirQuickView(producto: Producto) {
+    this.productoQuickView = producto;
+  }
+
+  cerrarQuickView() {
+    this.productoQuickView = null;
+  }
+
 
   /**
    * Navega a la página de detalle del producto

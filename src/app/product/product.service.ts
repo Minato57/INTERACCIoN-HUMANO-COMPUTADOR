@@ -16,17 +16,25 @@ export class ProductService {
    * Mapea un producto del backend a la interfaz Producto del frontend
    */
   private mapToProducto(bp: any): Producto {
+    const isDiscounted = bp.productIdAlmacen % 3 === 0;
+    const descPct = isDiscounted ? 15 + (bp.productIdAlmacen % 20) : 0;
+    const precio = Number(bp.pricePerMinor) || 0;
+
     return {
       id: bp.productIdAlmacen,
       productIdFabrica: bp.productIdFabrica,
       nombre: bp.name,
       descripcion: bp.ubicacion, 
       categoria: bp.productTypeName || 'General',
-      precio: Number(bp.pricePerMinor) || 0,
-      imagen: bp.imageUrl || 'img/cemento_portland.png',
+      precio: precio,
+      precioOriginal: isDiscounted ? precio / (1 - descPct / 100) : undefined,
+      descuento: isDiscounted ? descPct : undefined,
+      imagen: (bp.imageUrl || 'img/cemento_portland.png').startsWith('/') ? (bp.imageUrl || 'img/cemento_portland.png') : '/' + (bp.imageUrl || 'img/cemento_portland.png'),
       enStock: bp.stock > 0,
       stockQuantity: bp.stock,
-      destacado: false
+      destacado: bp.productIdAlmacen <= 4, // Los primeros 4 productos son destacados
+      rating: 3.5 + (bp.productIdAlmacen % 15) / 10,
+      reviews: 12 + ((bp.productIdAlmacen * 7) % 150)
     };
   }
 
