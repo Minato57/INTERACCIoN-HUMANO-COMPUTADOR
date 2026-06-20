@@ -29,7 +29,7 @@ export class ProductService {
       precio: precio,
       precioOriginal: isDiscounted ? precio / (1 - descPct / 100) : undefined,
       descuento: isDiscounted ? descPct : undefined,
-      imagen: (bp.imageUrl || 'img/cemento_portland.png').startsWith('/') ? (bp.imageUrl || 'img/cemento_portland.png') : '/' + (bp.imageUrl || 'img/cemento_portland.png'),
+      imagen: bp.imageUrl || 'img/cemento_portland.png',
       enStock: bp.stock > 0,
       stockQuantity: bp.stock,
       destacado: bp.productIdAlmacen <= 4, // Los primeros 4 productos son destacados
