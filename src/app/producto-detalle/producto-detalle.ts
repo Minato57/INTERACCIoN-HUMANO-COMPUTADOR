@@ -42,25 +42,29 @@ export class ProductoDetalleComponent implements OnInit {
       });
     });
   }
-
+//----------------------------------------------------------------------------------------------------------------------------------------------//
   aumentarCantidad() {
+    console.log(`[INTERACCIÓN - DETALLE] El usuario hizo clic en "+" para aumentar la cantidad`);
     if (this.producto && this.cantidad < (this.producto.stockQuantity ?? 99)) {
       this.cantidad++;
     }
   }
 
   disminuirCantidad() {
+    console.log(`[INTERACCIÓN - DETALLE] El usuario hizo clic en "-" para disminuir la cantidad`);
     if (this.cantidad > 1) this.cantidad--;
   }
 
   anadirAlCarrito() {
     if (!this.producto) return;
+    console.log(`[INTERACCIÓN - DETALLE] El usuario hizo clic en "Añadir al Carrito" (${this.cantidad} unidades de ${this.producto.nombre})`);
     this.cartService.addToCart(this.producto, this.cantidad);
     this.toastService.show(`¡Añadido ${this.cantidad}x ${this.producto.nombre} al carrito!`, 'success');
   }
 
   cotizarWhatsApp() {
     if (!this.producto) return;
+    console.log(`[INTERACCIÓN - DETALLE] El usuario hizo clic en "Cotizar por WhatsApp" para el producto: ${this.producto.nombre}`);
     const msg = encodeURIComponent(
       `Hola DIFERPA, estoy interesado en:\n\n` +
       `📦 Producto: ${this.producto.nombre}\n` +
@@ -73,6 +77,7 @@ export class ProductoDetalleComponent implements OnInit {
   }
 
   volverAlCatalogo() {
+    console.log(`[INTERACCIÓN - DETALLE] El usuario hizo clic en "Volver al Catálogo"`);
     this.router.navigate(['/catalogo']);
   }
 

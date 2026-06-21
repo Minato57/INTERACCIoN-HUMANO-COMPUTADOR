@@ -291,8 +291,6 @@
   gap: 1rem;
 }
 
-.progress-item {}
-
 .progress-row {
   display: flex;
   justify-content: space-between;

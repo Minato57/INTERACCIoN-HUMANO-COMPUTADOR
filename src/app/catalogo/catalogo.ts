@@ -144,16 +144,19 @@ export class CatalogComponent implements OnInit {
 
   cambiarPagina(pagina: number) {
     if (pagina >= 1 && pagina <= this.totalPaginas) {
+      console.log(`[INTERACCIÓN - CATÁLOGO] El usuario cambió a la página ${pagina}`);
       this.paginaActual = pagina;
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
   cambiarVista(vista: 'grid' | 'lista') {
+    console.log(`[INTERACCIÓN - CATÁLOGO] El usuario cambió la vista del catálogo a: ${vista.toUpperCase()}`);
     this.vistaActual = vista;
   }
 
   abrirQuickView(producto: Producto) {
+    console.log(`[INTERACCIÓN - CATÁLOGO] El usuario abrió la Vista Rápida del producto: ${producto.nombre}`);
     this.productoQuickView = producto;
   }
 
@@ -166,6 +169,7 @@ export class CatalogComponent implements OnInit {
    * Navega a la página de detalle del producto
    */
   verDetalle(id: number) {
+    console.log(`[INTERACCIÓN - CATÁLOGO] El usuario hizo clic en "Ver Detalles" del producto ID: ${id}`);
     this.router.navigate(['/producto', id]);
   }
 
@@ -173,6 +177,7 @@ export class CatalogComponent implements OnInit {
    * Añade el producto al carrito de compras
    */
   anadirAlCarrito(producto: Producto) {
+    console.log(`[INTERACCIÓN - CATÁLOGO] El usuario hizo clic en "Añadir" para el producto: ${producto.nombre}`);
     this.cartService.addToCart(producto, 1);
     this.toastService.show(`¡${producto.nombre} añadido al carrito!`, 'success');
   }
@@ -181,6 +186,7 @@ export class CatalogComponent implements OnInit {
    * Reinicia los filtros a los valores por defecto
    */
   limpiarFiltros() {
+    console.log(`[INTERACCIÓN - CATÁLOGO] El usuario hizo clic en "Limpiar Filtros"`);
     this.categoriaSeleccionada = CATEGORIAS.TODOS;
     this.precioMaximo = this.precioMaximoSlider;
     this.soloStock = false;
