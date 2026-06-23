@@ -1,34 +1,45 @@
-<div class="top-bar">
+<div class="top-bar" role="banner" aria-label="Información de contacto y envíos">
     <span>📞 {{ telefonoDisplay }}</span>
     <span>🚚 Envío gratis en compras mayores a S/ 500</span>
 </div>
 
-<nav class="navbar">
-    <a class="nav-logo" routerLink="/home">DIFERPA <span>S.A.C.</span></a>
+<nav class="navbar" role="navigation" aria-label="Navegación principal">
+    <a class="nav-logo" routerLink="/home" aria-label="DIFERPA S.A.C. - Ir a la página de inicio">DIFERPA <span>S.A.C.</span></a>
 
-    <div class="search-box">
-        <input type="text"
+    <div class="search-box" role="search">
+        <label for="navbar-search" class="visually-hidden">Buscar productos</label>
+        <input id="navbar-search"
+               type="search"
                placeholder="Buscar productos, herramientas, materiales..."
                [(ngModel)]="terminoBusqueda"
-               (keyup.enter)="buscar()">
-        <button class="search-btn" (click)="buscar()">🔍</button>
+               (keyup.enter)="buscar()"
+               aria-label="Buscar productos en el catálogo">
+        <button class="search-btn" (click)="buscar()" aria-label="Realizar búsqueda">🔍</button>
     </div>
 
-    <div class="nav-actions">
-        <button class="icon-btn" title="{{ authService.isLoggedIn() ? 'Cerrar sesión' : 'Mi cuenta (Login)' }}" (click)="toggleLoginModal()">
+    <div class="nav-actions" role="group" aria-label="Acciones de usuario">
+        <button class="icon-btn" 
+                [title]="authService.isLoggedIn() ? 'Cerrar sesión' : 'Mi cuenta'"
+                [attr.aria-label]="authService.isLoggedIn() ? 'Cerrar sesión' : 'Iniciar sesión en mi cuenta'"
+                (click)="toggleLoginModal()">
             {{ authService.isLoggedIn() ? '🚪' : '👤' }}
         </button>
-        <button class="icon-btn" title="Favoritos">❤️</button>
-        <button class="icon-btn" title="Carrito" (click)="abrirCarrito()">
-            🛒 <span class="badge" *ngIf="cantidadCarrito > 0">{{ cantidadCarrito }}</span>
+        <button class="icon-btn" title="Favoritos" aria-label="Ver lista de favoritos">❤️</button>
+        <button class="icon-btn" title="Carrito de compras" aria-label="Abrir carrito de compras" (click)="abrirCarrito()">
+            🛒 <span class="badge" *ngIf="cantidadCarrito > 0" aria-live="polite" [attr.aria-label]="cantidadCarrito + ' productos en el carrito'">{{ cantidadCarrito }}</span>
         </button>
-        <button class="icon-btn btn-hamburger" (click)="toggleMenu()" title="Menú">
-            {{ menuAbierto ? '✖' : '☰' }}
+        <button class="icon-btn btn-hamburger" 
+                (click)="toggleMenu()" 
+                title="Menú de navegación"
+                [attr.aria-label]="menuAbierto ? 'Cerrar menú' : 'Abrir menú de navegación'"
+                [attr.aria-expanded]="menuAbierto"
+                aria-controls="menu-categories">
+            <span aria-hidden="true">{{ menuAbierto ? '✖' : '☰' }}</span>
         </button>
     </div>
 </nav>
 
-<div class="menu-categories" [class.open]="menuAbierto">
+<div id="menu-categories" class="menu-categories" [class.open]="menuAbierto" role="navigation" aria-label="Categorías del catálogo">
     <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Inicio</a>
     <a routerLink="/catalogo" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Catálogo</a>
     <a *ngIf="authService.isAdmin()" routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="cerrarMenu()">Dashboard</a>
@@ -36,23 +47,28 @@
 </div>
 
 <!-- Modal de Login -->
-<div class="modal-overlay" *ngIf="mostrarModalLogin" (click)="cerrarModalLogin()">
+<div class="modal-overlay" 
+     *ngIf="mostrarModalLogin" 
+     (click)="cerrarModalLogin()"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="login-title">
     <div class="login-modal" (click)="$event.stopPropagation()">
         <div class="modal-header">
-            <h2>Acceso Administrativo</h2>
-            <button class="close-btn" (click)="cerrarModalLogin()">✖</button>
+            <h2 id="login-title">Acceso Administrativo</h2>
+            <button class="close-btn" (click)="cerrarModalLogin()" aria-label="Cerrar ventana de inicio de sesión">✖</button>
         </div>
         <div class="modal-body">
-            <div class="alert alert-error" *ngIf="loginError">
+            <div class="alert alert-error" role="alert" *ngIf="loginError">
                 Credenciales incorrectas. Intente de nuevo.
             </div>
             <div class="form-group">
-                <label>Usuario</label>
-                <input type="text" [(ngModel)]="loginUser" placeholder="Ej: admin">
+                <label for="login-username">Usuario</label>
+                <input id="login-username" type="text" [(ngModel)]="loginUser" placeholder="Ej: admin" autocomplete="username">
             </div>
             <div class="form-group">
-                <label>Contraseña</label>
-                <input type="password" [(ngModel)]="loginPass" placeholder="******" (keyup.enter)="iniciarSesion()">
+                <label for="login-password">Contraseña</label>
+                <input id="login-password" type="password" [(ngModel)]="loginPass" placeholder="******" (keyup.enter)="iniciarSesion()" autocomplete="current-password">
             </div>
             <button class="btn-primary login-submit" (click)="iniciarSesion()">Iniciar Sesión</button>
         </div>
