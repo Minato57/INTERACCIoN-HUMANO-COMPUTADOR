@@ -130,7 +130,14 @@ Para ingresar al panel administrativo, usa las siguientes credenciales de prueba
 
 ## 👥 Equipo
 
-Proyecto desarrollado para el curso de **Interacción Humano-Computador** — Universidad.
+Proyecto desarrollado en grupo para el curso de **Interacción Humano-Computador** — Universidad.
+
+| Integrante | GitHub |
+|-----------|--------|
+| **Minato57** | [@Minato57](https://github.com/Minato57) |
+| **Ludwing** | [@ludwing4648](https://github.com/ludwing4648) |
+| **Diego** | [@DiegoSZ21](https://github.com/DiegoSZ21) |
+
 
 ---
 
